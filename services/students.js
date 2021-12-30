@@ -1,3 +1,5 @@
+const {studentDao} = require('../dao');
+
 module.exports = {
   /**
   * 
@@ -5,33 +7,36 @@ module.exports = {
 
   */
   getStudentsList: async (options) => {
-
-    // Implement your business logic here...
-    //
-    // Return all 2xx and 4xx as follows:
-    //
-    // return {
-    //   status: 'statusCode',
-    //   data: 'response'
-    // }
-
-    // If an error happens during your business logic implementation,
-    // you can throw it as follows:
-    //
-    // throw new Error('<Error message>'); // this will result in a 500
+    const { 
+      sort = {
+          field: "lastName",
+          order: 1
+      },
+      skip = 0,
+      limit = 2
+   } = options;
+    
+    const {
+      results,
+      total
+    } = await studentDao.getStudentsList({
+      sort,
+      skip,
+      limit
+    });
 
     var data = {
-        "limit": "<integer>",
-        "results": "<array>",
-        "skip": "<integer>",
-        "total": "<integer>",
+        limit,
+        results,
+        skip,
+        total,
       },
-      status = '200';
+      status = 200;
 
     return {
       status: status,
       data: data
-    };  
+    };
   },
 
   /**
@@ -41,25 +46,9 @@ module.exports = {
   */
   getStudentById: async (options) => {
 
-    // Implement your business logic here...
-    //
-    // Return all 2xx and 4xx as follows:
-    //
-    // return {
-    //   status: 'statusCode',
-    //   data: 'response'
-    // }
+    const student = await studentDao.getStudentById(options)
 
-    // If an error happens during your business logic implementation,
-    // you can throw it as follows:
-    //
-    // throw new Error('<Error message>'); // this will result in a 500
-
-    var data = {
-        "_id": "<string>",
-        "firstName": "<string>",
-        "lastName": "<string>",
-      },
+    var data = student,
       status = '200';
 
     return {
