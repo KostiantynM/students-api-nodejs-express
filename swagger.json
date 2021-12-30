@@ -1,0 +1,233 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.3",
+        "title": "Students API",
+        "license": {
+            "name": "MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "localhost:3000"
+        }
+    ],
+    "paths": {
+        "/students": {
+            "get": {
+                "summary": "Get students list",
+                "operationId": "getStudentsList",
+                "tags": [
+                    "students list"
+                ],
+                "parameters": [
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "To sort results",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "firstName",
+                                "lastName"
+                            ],
+                            "x-example": "firstName"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Students list",
+                        "headers": {
+                            "x-next": {
+                                "description": "A link to the next page of responses",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StudentsList"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/students/{studentId}": {
+            "get": {
+                "summary": "Get student by id",
+                "operationId": "getStudentById",
+                "tags": [
+                    "student"
+                ],
+                "parameters": [
+                    {
+                        "name": "studentId",
+                        "in": "path",
+                        "description": "To retrieve student",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "x-example": "s76df5asd765f76"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Student",
+                        "headers": {
+                            "x-next": {
+                                "description": "A link to the next page of responses",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Student"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Student": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "x-example": "9hghjg123jhg123g"
+                    },
+                    "firstName": {
+                        "type": "string",
+                        "x-example": "Bob"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "x-example": "Snail"
+                    }
+                }
+            },
+            "StudentsList": {
+                "type": "object",
+                "required": [
+                    "results",
+                    "skip",
+                    "limit",
+                    "total"
+                ],
+                "properties": {
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "$ref": "#/components/schemas/Student"
+                        }
+                    },
+                    "skip": {
+                        "type": "integer",
+                        "x-example": 0
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "x-example": 10
+                    },
+                    "total": {
+                        "type": "integer",
+                        "x-example": 100
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "format": "int32",
+                        "x-example": "ERR_41327"
+                    },
+                    "message": {
+                        "type": "string",
+                        "x-example": "Some error happened"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "BasicAuth": {
+                "type": "http",
+                "scheme": "basic"
+            }
+        }
+    },
+    "security": [
+        {
+            "BasicAuth": []
+        }
+    ]
+}
