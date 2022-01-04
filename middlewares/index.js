@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const {
     hash,
     token
@@ -39,8 +40,14 @@ const auth = (req, res, next) => {
     }
 }
 
+const injectRequestId = (identity = 'some_one') => (req, res, next) => {
+    req.requestId = `${identity}-${uuidv4()}`;
+    res.setHeader('x-requestid', req.requestId);
+    next();
+};
 
 module.exports = {
     toHashPassword,
     auth,
+    injectRequestId
 }

@@ -16,6 +16,8 @@ const PORT = process.env.PORT || 3000,
 
 const db = require('./db');
 const {initLogger} = require('./common');
+const {injectRequestId} = require('./middlewares');
+
 const logger = initLogger();
 
 const serverRun = async () => {
@@ -42,6 +44,9 @@ const serverRun = async () => {
     app.use(express.static('public'));
     
     app.use(cookieParser());
+
+    app.use(injectRequestId(identity));
+
     app.use((req, res, next) => {
         req.logger = logger; //createLoggerWithContext({requestId})
         next();
