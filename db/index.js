@@ -4,7 +4,7 @@ let db;
 
 const initConnection = async () =>
     
-    db = await mongoose.connect('mongodb://localhost:27017', {
+    db = await mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost:27017', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

@@ -4,10 +4,14 @@ const express = require('express'),
     path = require('path'),
     cors = require('cors'),
     multer = require('multer'),
+    dotEnv = require('dotenv'),
     upload = multer(),
-    app = express(),
+    app = express();
+const {name: identity} = require('./package.json');
 
-    PORT = process.env.PORT || 3000,
+    dotEnv.config();
+
+const PORT = process.env.PORT || 3000,
     NODE_ENV = process.env.NODE_ENV || 'development';
 
 const db = require('./db');
