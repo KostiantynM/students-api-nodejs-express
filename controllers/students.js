@@ -61,9 +61,31 @@ const signup = async (req, res, next) => {
   }
 }
 
+const login = async (req, res, next) => {
+  const {
+    login,
+    password
+  } = req.body;
+  try {
+    const options = {
+      email: login,
+      password
+    }
+    console.log('Got login request with params', {options});
+    const token = await students.login(options);
+
+    res.status(200).send(token);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      error: err || 'Something went wrong.'
+    });
+  }
+}
 
 module.exports = {
     getStudentsList,
     getStudentById,
     signup,
+    login,
 }

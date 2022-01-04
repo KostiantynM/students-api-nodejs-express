@@ -39,6 +39,19 @@ class StudentDao {
 
         return student;
     }
+
+    async findByAuth (options) {
+        console.log('Find by auth callde', {options});
+        const student = await this.modelStudent.findOne(options);
+
+        return student;
+    }
+
+    async saveToken ({_id, token}) {
+        //search  query
+        //payload
+        await this.modelStudent.update({_id}, {token});
+    }
 }
 
 module.exports = new StudentDao({

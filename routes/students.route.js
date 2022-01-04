@@ -10,6 +10,6 @@ const {
 } = require('../middlewares');
 
 router.post('/', toHashPassword, students.signup);
-router.get('/:studentId',  students.getStudentById);
+router.post('/login', students.login);
 
 module.exports = router;

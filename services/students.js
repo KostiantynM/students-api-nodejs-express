@@ -1,4 +1,5 @@
 const {studentDao} = require('../dao');
+const {token} = require('../drivers');
 
 module.exports = {
   /**
@@ -56,4 +57,37 @@ module.exports = {
       data: data
     };  
   },
+
+  signup: async (options) => {
+    try {
+      const student = await studentDao.signup(options);
+      return student;
+
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  },
+  
+  login: async (options) => {
+    // token --->>> _id, firstName
+    const student = await studentDao.findByAuth(options);
+  
+
+    if (!student) {
+      throw 'NotFound'
+    }
+
+    const studentToken = token.sign({
+      _id: student._id,
+      firstName: student.firstName
+    });
+
+    await studentDao.saveToken({
+      _id: student._id,
+      token:studentToken
+    });
+
+    return studentToken;
+  }
 };
