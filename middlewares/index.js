@@ -1,5 +1,6 @@
 const {
     hash,
+    token
 } = require('../drivers');
 
 const toHashPassword = (req, res, next) => {
@@ -17,7 +18,29 @@ const toHashPassword = (req, res, next) => {
     
 };
 
+const auth = (req, res, next) => {
+    try {
+        const requesterToken = req.headers['x-auth-header'];
+        console.log('Requested with token', req.headers);
+        if (!token) throw 'NotAuth'
+
+        const payload = token.verify(requesterToken);
+
+        req.ctx = {
+            requester: payload
+        };
+
+        next();
+
+    } catch(err) {
+        console.log('Auth Error happened', err);
+        next(err);
+        //res.status(401).send('Invalid token');
+    }
+}
+
 
 module.exports = {
     toHashPassword,
+    auth,
 }
