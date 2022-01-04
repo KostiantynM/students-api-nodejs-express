@@ -33,6 +33,12 @@ class StudentDao {
 
         return student;
     }
+
+    async signup (options) {
+        const student = await this.modelStudent.create(options);
+
+        return student;
+    }
 }
 
 module.exports = new StudentDao({

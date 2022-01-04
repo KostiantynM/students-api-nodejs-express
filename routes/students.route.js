@@ -3,11 +3,13 @@ const router = new express.Router();
 
 const {
   students
-} = require('../controllers')
- 
-router.get('/', students.getStudentsList
+} = require('../controllers');
+const {
+  toHashPassword,
 );
- 
+} = require('../middlewares');
+
+router.post('/', toHashPassword, students.signup);
 router.get('/:studentId',  students.getStudentById);
 
 module.exports = router;

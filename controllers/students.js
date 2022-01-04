@@ -35,7 +35,35 @@ const getStudentById = async (req, res, next) => {
     }
   }
 
+const signup = async (req, res, next) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    password
+  } = req.body;
+
+  try {
+    const options = {
+      firstName,
+      lastName,
+      email,
+      password
+    };
+    const student = await students.signup(options);
+
+    res.status(200).json(student);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      error: err || 'Something went wrong.'
+    });
+  }
+}
+
+
 module.exports = {
     getStudentsList,
     getStudentById,
+    signup,
 }
