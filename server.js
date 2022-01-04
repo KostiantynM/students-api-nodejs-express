@@ -15,7 +15,12 @@ const PORT = process.env.PORT || 3000,
     NODE_ENV = process.env.NODE_ENV || 'development';
 
 const db = require('./db');
-const {initLogger} = require('./common');
+const { 
+    logger: {
+        init: initLogger,
+        initWithContext: initLoggerWithContext 
+    }
+} = require('./common');
 const {injectRequestId} = require('./middlewares');
 
 const logger = initLogger();
@@ -24,7 +29,7 @@ const serverRun = async () => {
     app.set('port', PORT);
     app.set('env', NODE_ENV);
 
-    await db.initConnection();
+    await db.initConnection({logger});
     
     app.use(cors());
     app.use(log('tiny'));
@@ -48,7 +53,7 @@ const serverRun = async () => {
     app.use(injectRequestId(identity));
 
     app.use((req, res, next) => {
-        req.logger = logger; //createLoggerWithContext({requestId})
+        req.logger = initLoggerWithContext({ requestId: req.requestId });
         next();
     });
     
@@ -56,7 +61,7 @@ const serverRun = async () => {
     
     // catch 404
     app.use((req, res, next) => {
-        // log.error(`Error 404 on ${req.url}.`);
+        req.logger.warn(`Error 404 on ${req.url}.`);
         res.status(404).send({ status: 404, error: 'Not found' });
     });
     
@@ -74,7 +79,7 @@ const serverRun = async () => {
     
     
     app.listen(PORT, () => {
-        console.log(
+        logger.info(
             `Express Server started on Port ${app.get(
                 'port'
             )} | Environment : ${app.get('env')}`

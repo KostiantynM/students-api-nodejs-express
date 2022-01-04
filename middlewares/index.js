@@ -13,7 +13,7 @@ const toHashPassword = (req, res, next) => {
     
         next();
     } catch(err) {
-        console.log(err);
+        req.logger.error('Failed to hash password', err);
         next(err);
     }
     
@@ -22,10 +22,10 @@ const toHashPassword = (req, res, next) => {
 const auth = (req, res, next) => {
     try {
         const requesterToken = req.headers['x-auth-header'];
-        console.log('Requested with token', req.headers);
+        req.logger.info('Requested with token', req.headers);
         if (!token) throw 'NotAuth'
 
-        const payload = token.verify(requesterToken);
+        const payload = token.verify(requesterToken, {logger: req.logger});
 
         req.ctx = {
             requester: payload
@@ -34,9 +34,8 @@ const auth = (req, res, next) => {
         next();
 
     } catch(err) {
-        console.log('Auth Error happened', err);
+        req.logger.error('Auth Error happened', err);
         next(err);
-        //res.status(401).send('Invalid token');
     }
 }
 

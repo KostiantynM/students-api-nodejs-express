@@ -1,3 +1,4 @@
+const logger = require('../common/logger');
 const {studentDao} = require('../dao');
 const {token} = require('../drivers');
 
@@ -58,13 +59,13 @@ module.exports = {
     };  
   },
 
-  signup: async (options) => {
+  signup: async (options, ctx) => {
     try {
       const student = await studentDao.signup(options);
       return student;
 
     } catch (err) {
-      console.log(err);
+      ctx.logger.error('Failed to signup', err);
       throw err;
     }
   },

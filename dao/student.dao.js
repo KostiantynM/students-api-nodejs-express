@@ -40,8 +40,8 @@ class StudentDao {
         return student;
     }
 
-    async findByAuth (options) {
-        console.log('Find by auth callde', {options});
+    async findByAuth (options, ctx) {
+        ctx.logger.info('Find by auth called', {options});
         const student = await this.modelStudent.findOne(options);
 
         return student;

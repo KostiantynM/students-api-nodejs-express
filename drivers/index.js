@@ -4,13 +4,13 @@ const jsonSecret = process.env.JSON_SECRET;
 
 const token = {
     sign: (options) => jsonwebtoken.sign(options, jsonSecret),
-    verify: (token) => {
+    verify: (token, ctx) => {
         try {
             const decoded = jsonwebtoken.verify(token, jsonSecret);
-            console.log('Succsessfully decoded', {decoded});
+            ctx.logger.info('Succsessfully decoded', {decoded});
             decoded;
         } catch (err) {
-            console.log('Filed to verify token', err);
+            ctx.logger.error('Filed to verify token', err);
             throw err;
         }
     }
