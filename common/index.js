@@ -1,6 +1,9 @@
-const {init} = require('./logger')
+const {init, initWithContext} = require('./logger')
 
 
 module.exports = {
-    initLogger: init
+    logger: {
+        init,
+        initWithContext,
+    }
 }
