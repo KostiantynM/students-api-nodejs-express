@@ -15,6 +15,8 @@ const PORT = process.env.PORT || 3000,
     NODE_ENV = process.env.NODE_ENV || 'development';
 
 const db = require('./db');
+const {initLogger} = require('./common');
+const logger = initLogger();
 
 const serverRun = async () => {
     app.set('port', PORT);
@@ -40,6 +42,10 @@ const serverRun = async () => {
     app.use(express.static('public'));
     
     app.use(cookieParser());
+    app.use((req, res, next) => {
+        req.logger = logger; //createLoggerWithContext({requestId})
+        next();
+    });
     
     require('./routes')(app);
     
@@ -51,6 +57,7 @@ const serverRun = async () => {
     
     // catch errors
     app.use((err, req, res, next) => {
+        req.logger.error('Custom error handler got an error', err);
         const status = err.status || 500;
         const msg = err.error || err.message;
         // log.error(`Error ${status} (${msg}) on ${req.method} ${req.url} with payload ${req.body}.`);

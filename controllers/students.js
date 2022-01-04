@@ -3,15 +3,16 @@ const {
 } = require('../services');
 
 const getStudentsList = async (req, res, next) => {
+    const {logger, requestId} = req;
     let options = req.query;
-  
+    logger.info('[getStudentsList] requested', {requestId}); // warn, error
   
     try {
       const result = await students.getStudentsList(options);
       res.status(result.status || 200).send(result.data);
     }
     catch (err) {
-        console.log('error accuared', err)
+        logger.error('error accuared', {err, requestId});
       return res.status(500).send({
         error: err || 'Something went wrong.'
       });
